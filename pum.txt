@@ -1,0 +1,1306 @@
+﻿Program 1
+
+conf.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+	<bean id="customer"
+		class="com.example.FirstProg.Customer"
+		scope="prototype">
+	<property name="tick" ref="ticket"></property>
+	</bean>
+	<bean id="ticket" class="com.example.FirstProg.Ticket" scope="prototype"/>
+
+  <!-- more bean definitions for data access objects go here -->
+
+</beans>
+
+Customer.java
+package com.example.FirstProg;
+
+public class Customer {
+	String name, address;
+	Ticket tick;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public Ticket getTick() {
+		return tick;
+	}
+	public void setTick(Ticket tick) {
+		this.tick = tick;
+	}
+	@Override
+	public String toString() {
+		return name + " " + address;
+	}
+}
+
+
+
+Ticket.java
+package com.example.FirstProg;
+
+public class Ticket {
+	int ticno,price,seatno;
+	String ticktype;
+	public int getTicno() {
+		return ticno;
+	}
+	public void setTicno(int ticno) {
+		this.ticno = ticno;
+	}
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	public int getSeatno() {
+		return seatno;
+	}
+	public void setSeatno(int seatno) {
+		this.seatno = seatno;
+	}
+	public String getTicktype() {
+		return ticktype;
+	}
+	public void setTicktype(String ticktype) {
+		this.ticktype = ticktype;
+	}
+}
+
+
+FirstProgApplication.java
+package com.example.FirstProg;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+@SpringBootApplication
+public class FirstProgApplication {
+
+	public static void main(String[] args) {
+//		List<Customer> l = new ArrayList(); (For storing the details if asked)
+		SpringApplication.run(FirstProgApplication.class, args);
+		Scanner sc = new Scanner(System.in);
+		ApplicationContext ac = new ClassPathXmlApplicationContext("conf.xml");
+		Customer c = (Customer) ac.getBean("customer");
+		Ticket t = c.getTick();
+		while(true) {
+			System.out.println("1. insert the details\n 2. Display details \n"
+			+ "3. exit");
+			System.out.println("enter the choice");
+			int a = sc.nextInt();
+			switch(a) {
+			case 1:
+			System.out.println("enter the customer name");
+			c.setName(sc.next());
+			System.out.println("enter the customer address");
+			c.setAddress(sc.next());
+			System.out.println("enter the ticket number");
+			t.setTicno(sc.nextInt());
+			System.out.println("enter the ticket seat no");
+			t.setSeatno(sc.nextInt());
+			System.out.println("enter the ticket price");
+			t.setPrice(sc.nextInt());
+			System.out.println("enter the ticket Type economic/gold/platinum");
+			t.setTicktype(sc.next());
+			c.setTick(t);
+			System.out.println("thanks for input");
+//			l.add(c); (Adding to list)
+			break;
+			case 2:
+			System.out.println("Customer Details:");
+			System.out.println("Name:"+c.getName()+" "+"Address:"+c.getAddress());
+			System.out.println("Ticket Details");
+			t = c.getTick();
+			System.out.println("Ticket No: "+t.getTicno());
+			System.out.println("Ticket Type: "+t.getTicktype());
+			System.out.println("Ticket Seat No: "+t.getSeatno());
+			System.out.println("Ticket Price: "+t.getPrice());
+//			l.forEach(System.out::println); (Displaying the list)
+			break;
+			case 3:
+			System.exit(0);
+			}
+		}
+	}
+
+}
+
+
+Program 2
+
+conf.xml';
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+	<bean id="department" class="com.example.SecondProg.Department"
+	scope="prototype">
+	<constructor-arg name="college" ref="college"/>
+	</bean>
+	<bean id="college" class="com.example.SecondProg.College" scope="singleton"><property name="name" value="RV College of Engineering"/>
+	<property name="address" value="Mysuru Road, Bengaluru"/>
+	</bean>
+
+</beans>
+
+
+College.java
+package com.example.SecondProg;
+
+public class College {
+	String name, address;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+}
+
+
+Department.java
+package com.example.SecondProg;
+
+public class Department {
+	String name, description;
+	int id;
+	College college;
+	public Department(College college) {
+		this.college = college;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public College getCollege() {
+		return college;
+	}
+	
+}
+
+
+SecondProgApplication.java
+package com.example.SecondProg;
+
+import java.util.Scanner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+@SpringBootApplication
+public class SecondProgApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SecondProgApplication.class, args);
+		ApplicationContext ac = new ClassPathXmlApplicationContext("conf.xml");
+		Department dt = (Department) ac.getBean("department");
+		Scanner sc = new Scanner(System.in);
+		
+		while(true) {
+			System.out.println("1. insert the Department details\n "
+			+ "2. Display Department with College details \n"
+			+ "3. exit");
+			System.out.println("enter the choice");
+			int a = sc.nextInt();
+			switch(a) {
+			case 1:
+			System.out.println("enter the Department name");
+			dt.setName(sc.next());
+			System.out.println("enter the Department no");
+			dt.setId(sc.nextInt());
+			System.out.println("enter the Department Decription");
+			dt.setDescription(sc.next());
+			System.out.println("thanks for input");
+			break;
+			case 2:
+			System.out.println("Department Details:");
+			System.out.println("Name:"+dt.getName()+" "+" ID:"+dt.getId()+
+			" Department Description"+dt.getDescription());
+			System.out.println("College Details");
+			College c = dt.getCollege();
+			System.out.println("College Name: "+c.getName());
+			System.out.println("College Address: "+c.getAddress());
+			break;
+			case 3:
+			System.exit(0);
+			}
+		}
+	}
+}
+
+
+Program 3
+
+Book.java
+package com.example.ThirdProg;
+
+public class Book {
+	private Long id;
+	private String title, author;
+	private int publicationYear;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public int getPublicationYear() {
+		return publicationYear;
+	}
+	public void setPublicationYear(int publicationYear) {
+		this.publicationYear = publicationYear;
+	}
+	
+}
+
+BookController.java
+package com.example.ThirdProg;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping
+public class BookController {
+	List<Book> books = new ArrayList<Book>();
+	
+	@GetMapping("/app/list")
+	public List<Book> getBooks(){
+		return books;
+	}
+	
+	@PostMapping("/app/add")
+	public Book addBook(@RequestBody Book book) {
+		books.add(book);
+		return book;
+	}
+}
+
+
+ThirdProgApplication.java
+package com.example.ThirdProg;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ThirdProgApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ThirdProgApplication.class, args);
+	}
+
+}
+
+
+Program 4
+BookController.java (Added additional HTTP operations to Program 3)
+package com.example.ThirdProg;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/app")
+public class BookController {
+	List<Book> books = new ArrayList<Book>();
+	
+	@GetMapping("/list")
+	public List<Book> getBooks(){
+		return books;
+	}
+	
+	@GetMapping("/show/{id}")
+	public Book getBookById(@PathVariable Long id) {
+		return findBookById(id);
+	}
+	
+	@PostMapping("/add")
+	public Book addBook(@RequestBody Book book) {
+		book.setId(generateBookId());
+		books.add(book);
+		return book;
+	}
+	
+	@PutMapping("/update/{id}")
+	public Book updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+		Book existingBook = findBookById(id);
+		if (existingBook != null) {
+			existingBook.setTitle(updatedBook.getTitle());
+			existingBook.setAuthor(updatedBook.getAuthor());
+			existingBook.setPublicationYear(updatedBook.getPublicationYear());
+		}
+		return existingBook;
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public void deleteBook(@PathVariable Long id) {
+		Book bookToRemove = findBookById(id);
+		if (bookToRemove != null) {
+			books.remove(bookToRemove);
+		}
+	}
+	
+	private Book findBookById(Long id) {
+		for(int i = 0; i < books.size(); i++) {
+			Book book = books.get(i);
+			if(book.getId().equals(id)) {
+				return book;
+			}
+		}
+		return null;
+	}
+	
+	private Long generateBookId() {
+		return System.currentTimeMillis();
+	} 
+}
+
+Program 5
+Product.java
+package com.example.FifthProg;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public class Product {
+	@NotNull(message="Id can't be empty")
+	@Min(1)
+	@Max(100)
+	private Long id;
+	
+	@NotBlank(message="Name can't be empty")
+	private String name;
+	
+	@Min(1)
+	@NotNull(message="Price can't be empty")
+	private Double price;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+}
+
+ProductController.java
+package com.example.FifthProg;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api")
+public class ProductController {
+	private final List<Product> products = new ArrayList<>();
+	
+	@PostMapping("/add")
+	public ResponseEntity<?> addProduct(@Valid @RequestBody Product product,
+	BindingResult result) {
+		List<String> displayErrors = new ArrayList<String>();
+		if (result.hasErrors()) {
+			List<FieldError> errors = result.getFieldErrors();
+			for(FieldError err:errors) {
+				displayErrors.add(err.getField() + ": " + err.getDefaultMessage());
+				System.out.println(displayErrors);
+			}
+			return ResponseEntity.badRequest().body(displayErrors);
+		}
+		products.add(product);
+		return ResponseEntity.status(HttpStatus.CREATED).body(product);
+		}
+	
+	@GetMapping("/list")
+	public List<Product> getProduct(){
+		return products;
+	}
+}
+
+FifthProgApplication.java
+package com.example.FifthProg;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class FifthProgApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(FifthProgApplication.class, args);
+	}
+
+}
+
+Program 6
+hibernate.cfg.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://<url>:3306/student</property>
+		<property name="hibernate.connection.username">username</property>
+		<property name="hibernate.connection.password">pass</property>
+        <property name="hibernate.connection.pool_size">10</property>    
+      	<property name="show_sql">true</property> 
+      	<property name="hibernate.hbm2ddl.auto">update</property>
+           <mapping resource="student.xml"/>        
+    </session-factory>    
+</hibernate-configuration>
+
+Student.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="labsix.Student" table="sample">
+		<id name="id" type="int" column="id">
+			<generator class="native" />
+		</id>
+		<property name="totalmarks" column="totalMarks" type="int" />
+		<property name="name" column="name" type="string" />
+	</class>
+</hibernate-mapping>
+
+Student.java
+
+
+package labsix;
+
+public class Student {
+
+	
+	int id;
+	int totalmarks;
+	String name;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getTotalmarks() {
+		return this.totalmarks;
+	}
+
+	public void setTotalmarks(int totalMarks) {
+		this.totalmarks = totalMarks;
+	}
+
+
+	public String getName() {
+		return this.name;
+	}
+
+	public Student(int totalmarks, String name) {
+		super();
+		this.totalmarks = totalmarks;
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", totalmarks=" + totalmarks + ", name=" + name + "]";
+	}
+
+	public Student(int id, int totalmarks, String name) {
+		this.id = id;
+		this.totalmarks = totalmarks;
+		this.name = name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Student() {
+        // Default constructor
+    }
+
+	
+}
+
+StudentMain.java
+package labsix;
+
+
+
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+public class StudentMain {
+	SessionFactory sf=new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+	Session session=sf.openSession();
+	
+	public void insert(String name,int marks) {
+		Transaction t = session.beginTransaction();
+		Student s = new Student(marks,name);
+		session.save(s);
+		t.commit();
+	}
+	public void display() {
+		List<Student> studentList = session.createQuery("from Student", Student.class).getResultList();
+	   studentList.forEach(System.out::println);
+	}
+	public void update(int id, String name, int marks) {
+		Transaction t = session.beginTransaction();
+	    Student student = session.get(Student.class, id);
+	    if (student != null) {
+	        student.setName(name);
+	        student.setTotalmarks(marks);
+	        session.update(student);
+	     
+	    } else {
+	        System.out.println("Student with ID " + id + " not found.");
+	    }
+	    t.commit();
+	}
+	public void delete(int id) {
+	    Transaction t = session.beginTransaction();
+	    Student student = session.get(Student.class, id);
+	    if (student != null) {
+	        session.delete(student);                             
+	        
+	    } else {
+	        System.out.println("Student with ID " + id + " not found.");
+	    }
+	    t.commit();
+	}
+}
+Main.java
+package labsix;
+
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		StudentMain sm = new StudentMain();
+		Scanner sc = new Scanner(System.in);
+		while(true) {
+			System.out.println("1.Add \n 2.display \n 3.Update \n 4.Delete");
+			System.out.println("Enter your choice ");
+			int ch=sc.nextInt();
+			if(ch==1) {
+				System.out.println("Enter name");
+				String name=sc.next();
+				System.out.println("marks");
+				int marks=sc.nextInt();
+				sm.insert(name, marks);
+				
+			}
+			else if(ch==2) {
+				sm.display();
+			}
+			
+			else if (ch==3) {
+				System.out.println("id");
+				int id=sc.nextInt();
+				System.out.println("Enter name");
+				String name=sc.next();
+				System.out.println("marks");
+				int marks=sc.nextInt();
+				sm.update(id, name, marks);
+			}
+			else if (ch==4) {
+				System.out.println("id");
+				int id=sc.nextInt();
+				sm.delete(id);
+			}
+			else {
+				break;
+			}
+		}
+		}
+}
+#POM .xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>six</groupId>
+  <artifactId>six</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>labsix</name>
+  
+  <dependencies>
+	  <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
+<dependency>
+    <groupId>org.hibernate.orm</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>7.0.0.Alpha1</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
+<dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <version>8.3.0</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+<dependency>
+    <groupId>org.hibernate.validator</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>8.0.1.Final</version>
+</dependency>
+  </dependencies>
+</project>
+
+
+Program 7
+
+Customer.java
+
+package com.example.SeventhProg;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="product")
+public class Customer {
+@Id
+@GeneratedValue(strategy=GenerationType.AUTO)
+private Long id;
+private String firstName;
+private String lastName;
+protected Customer() {}
+
+public Customer(String firstName, String lastName) {
+this.firstName = firstName;
+this.lastName = lastName;
+}
+@Override
+public String toString() {
+return String.format(
+"Customer[id=%d, firstName='%s', lastName='%s']",
+id, firstName, lastName);
+}
+public Long getId() {
+return id;
+}
+public String getFirstName() {
+return firstName;
+}
+public String getLastName() {
+return lastName;
+}
+public void setFirstName(String fname) {
+	this.firstName = fname;
+	
+}
+public void setLastName(String lname) {
+	this.lastName = lname;
+}
+}
+
+
+
+
+CustomerRepository.java
+
+package com.example.SeventhProg;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface CustomerRepository extends JpaRepository<Customer, Long> { 
+	
+}
+
+CustomerService.java
+
+package com.example.SeventhProg;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomerService {
+@Autowired
+private CustomerRepository customerRepository;
+public void addCustomer(String fname, String lname) {
+Customer customer = new Customer();
+customer.setFirstName(fname);
+customer.setLastName(lname);
+customerRepository.save(customer);
+}
+public List<Customer> getAllCustomers() {
+return customerRepository.findAll();
+}
+public void updateCustomer(long id, String fname, String lname) {
+Customer customer = customerRepository.findById(id).orElse(null);
+if (customer != null) {
+customer.setFirstName(fname);
+customer.setLastName(lname);
+customerRepository.save(customer);
+}
+}
+public void deleteCustomer(long id) {
+customerRepository.deleteById(id);
+}
+}
+
+
+SeventhProgApplication.java
+package com.example.SeventhProg;
+
+import java.util.Scanner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+@SpringBootApplication
+public class SeventhProgApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SeventhProgApplication.class, args);
+		ConfigurableApplicationContext context =
+				SpringApplication.run(SeventhProgApplication.class, args);
+		
+		CustomerService customerService =
+				context.getBean(CustomerService.class);
+
+				Scanner scanner = new Scanner(System.in);
+				while (true) {
+				System.out.println("\nMenu:");
+				System.out.println("1. Add Customer");
+				System.out.println("2. View All Customers");
+				System.out.println("3. Update Customer");
+				System.out.println("4. Delete Customer");
+				System.out.println("5. Exit");
+				System.out.print("Enter your choice: ");
+				int choice = scanner.nextInt();
+				scanner.nextLine(); // Consume the newline character
+				switch (choice) {
+				case 1:
+				System.out.print("Enter customer first name: ");
+				String fname = scanner.nextLine();
+				System.out.print("Enter customer last name: ");
+				String lname = scanner.nextLine();
+				customerService.addCustomer(fname, lname);
+				System.out.println("Customer added successfully!");
+				break;
+				case 2:
+				System.out.println("All Customers:");
+				customerService.getAllCustomers().forEach(System.out::println);
+
+				break;
+				case 3:
+				System.out.print("Enter customer id to update: ");
+				long updateId = scanner.nextLong();
+				scanner.nextLine(); // Consume the newline character
+				System.out.print("Enter updated name: ");
+				String updatedFName = scanner.nextLine();
+				System.out.print("Enter updated email: ");
+				String updatedLName = scanner.nextLine();
+
+				customerService.updateCustomer(updateId, updatedFName,
+
+				updatedLName);
+
+				System.out.println("Customer updated successfully!");
+				break;
+				case 4:
+				System.out.print("Enter customer id to delete: ");
+				long deleteId = scanner.nextLong();
+				customerService.deleteCustomer(deleteId);
+				System.out.println("Customer deleted successfully!");
+				break;
+				case 5:
+				System.out.println("Exiting the program.");
+				context.close();
+				System.exit(0);
+				break;
+				default:
+				System.out.println("Invalid choice. Please enter a number between 1 and 5.");
+				}
+
+				}
+				
+	
+	}
+
+}
+
+application.properties
+spring.application.name=SeventhProg
+spring.datasource.url = jdbc:mysql://localhost:3306/customer
+spring.datasource.driverClassName = com.mysql.cj.jdbc.Driver
+spring.datasource.username = username
+spring.datasource.password = password
+spring.jpa.show-sql = true
+spring.jpa.hibernate.ddl-auto = update
+
+Program 8
+
+Dockerfile
+FROM openjdk:17
+COPY *.jar app.jar
+CMD ["java","-jar","app.jar"]
+
+FROM eclipse-temurin:17-jdk-alpine
+VOLUME /tmp
+COPY *.jar app.jar
+ENTRYPOINT ["java","-jar", "app.jar"]
+
+commands:
+
+docker build -t <imagename> .
+docker run -p 8080:8080 -d <imagename>
+postmen person name address
+Program 9
+
+https://github.com/srijith-46/CNFD-2
+
+version: '3.8'
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: sampledb
+      MYSQL_ROOT_PASSWORD: admin
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+  spring-app:
+    image: <imagename>
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      spring.datasource.url: jdbc:mysql://db:3306/sampledb
+      spring.datasource.username: root
+      spring.datasource.password: admin
+
+commands:
+
+docker build -t <filename> .
+docker compose -f dockercompose.yaml up -d
+docker compose -f dockercompose.yaml down
+
+Program 10
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ten-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ten-app
+  template:
+    metadata:
+      labels:
+        app: ten-app
+    spec:
+      containers:
+        - name: ten-app
+          image: <image name>
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  selector:
+    app: ten-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+
+or
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+      - name: springboot-app
+        image: onekeys/springboot-app:latestt
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: example-deployment
+  name: example-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: example-deployment
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+status: {}
+service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-app
+spec:
+  type: NodePort
+  selector:
+    app: springboot-app
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30001
+
+commands:
+
+eval $(minikube docker-env)
+docker build -t <image name> .
+eval $(minikube docker-env)
+kubectl -f apply kuber.yaml
+minikube services myapp-service
+minikube dashboard
+kubectl get pods
+
+
+Program 7 
+
+package com.cnf.labseven;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+public class Student {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	int id;
+	public Student(int id, int totalmarks, String name) {
+		this.id = id;
+		this.totalmarks = totalmarks;
+		this.name = name;
+	}
+	
+	public Student(int totalmarks, String name) {
+		super();
+		this.totalmarks = totalmarks;
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", totalmarks=" + totalmarks + ", name=" + name + "]";
+	}
+
+	public Student() {
+		super();
+	}
+
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getTotalmarks() {
+		return totalmarks;
+	}
+	public void setTotalmarks(int totalmarks) {
+		this.totalmarks = totalmarks;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	int totalmarks;
+	String name;
+
+}
+
+
+package com.cnf.labseven;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StudentRepository extends JpaRepository<Student, Integer>{
+
+}
+package com.cnf.labseven;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class StudentService {
+@Autowired
+public StudentRepository sr;
+public List<Student> display(){
+	return sr.findAll();
+}
+public Student insert(Student s) {
+	return sr.save(s);
+}
+
+public void update(int id,int marks, String name){
+	Student s=this.sr.findById(id).get();
+	if(s!=null) {
+		s.setTotalmarks(marks);
+		s.setName(name);
+		this.sr.save(s);
+	}
+	
+}
+
+public void delete(int id) {
+	Student s=this.sr.findById(id).get();
+	this.sr.delete(s);
+}
+
+}	
+
+package com.cnf.labseven;
+
+import java.util.Scanner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+@SpringBootApplication
+public class LabsevenApplication {
+
+	public static void main(String[] args) {
+		StudentService sm= SpringApplication.run(LabsevenApplication.class, args).getBean(StudentService.class);
+		Scanner sc = new Scanner(System.in);
+		while(true) {
+			System.out.println("1.Add \n 2.display \n 3.Update \n 4.Delete");
+			System.out.println("Enter your choice ");
+			int ch=sc.nextInt();
+			if(ch==1) {
+				System.out.println("Enter name");
+				String name=sc.next();
+				System.out.println("marks");
+				int marks=sc.nextInt();
+				sm.insert(new Student (marks, name));
+				
+			}
+			else if(ch==2) {
+				sm.display().forEach(System.out::println);;
+			}
+			
+			else if (ch==3) {
+				System.out.println("id");
+				int id=sc.nextInt();
+				System.out.println("Enter name");
+				String name=sc.next();
+				System.out.println("marks");
+				int marks=sc.nextInt();
+				sm.update(id, marks, name);
+			}
+			else if (ch==4) {
+				System.out.println("id");
+				int id=sc.nextInt();
+				sm.delete(id);
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+}
+
+prg 9
+mvn clean instal
+docker build -t imagename:latest .
+kk:latest
+docker compose up
+sudo mysql -u root -p
+postman
+
+
+docker-compuse.yaml
+version: "3.8"
+
+services:
+   db:
+       image: mysql:latest
+       environment:
+               DATABASE_HOST: docker-mysql
+               DATABASE_PORT: 3306
+               MYSQL_ROOT_PASSWORD: root
+               MYSQL_DATABASE: student
+               MYSQL_USER: admin
+               MYSQL_PASSWORD: root
+       networks:
+        - default
+   app:
+       image: myorg/myapp:latest
+       ports: 
+       - 8080:8080
+       environment:
+              spring.datasource.url: jdbc:mysql://db:3306/student
+              spring.datasource.driverClassName: com.mysql.cj.jdbc.Driver
+              spring.datasource.username: admin
+              spring.datasource.password: root
+       depends_on: 
+            - db
+       networks:
+            - default
